@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.koodo.eblog.entity.Post;
 import com.koodo.eblog.vo.PostVo;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
 /**
  * <p>
@@ -17,7 +18,10 @@ import org.apache.ibatis.annotations.Param;
  * @author choudaichi
  * @since 2020-05-20
  */
+@Component
 public interface PostMapper extends BaseMapper<Post> {
 
     IPage<PostVo> selectPosts(Page page, @Param(Constants.WRAPPER) QueryWrapper wrapper);
+
+    PostVo selectOnePost(@Param(Constants.WRAPPER) QueryWrapper<Post> wrapper);
 }

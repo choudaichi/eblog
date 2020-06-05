@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.koodo.eblog.entity.Post;
 import com.koodo.eblog.mapper.PostMapper;
 import com.koodo.eblog.service.PostService;
+import com.koodo.eblog.vo.PostVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,5 +39,10 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
                 .gt(level > 0, "level", 0)
                 .orderByDesc(order != null, order);
         return postMapper.selectPosts(page, wrapper);
+    }
+
+    @Override
+    public PostVo selectOnePost(QueryWrapper<Post> wrapper) {
+        return postMapper.selectOnePost(wrapper);
     }
 }
