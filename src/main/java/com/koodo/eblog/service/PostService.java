@@ -9,7 +9,7 @@ import com.koodo.eblog.vo.PostVo;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author choudaichi
@@ -20,4 +20,9 @@ public interface PostService extends IService<Post> {
     IPage paging(Page page, Long categoryId, Long userId, Integer level, Boolean recommend, String order);
 
     PostVo selectOnePost(QueryWrapper<Post> wrapper);
+
+    void initWeekRank();
+
+    void incrCommentCountAndUnionForWeekRank(long postId, boolean isIncr);
+
 }
