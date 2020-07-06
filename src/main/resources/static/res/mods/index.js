@@ -551,11 +551,12 @@ layui.define(['layer', 'laytpl', 'form', 'element', 'upload', 'util'], function(
     var action = $(data.form).attr('action'), button = $(data.elem);
     fly.json(action, data.field, function(res){
       var end = function(){
-        if(res.action){
-          location.href = res.action;
-        } else {
-          fly.form[action||button.attr('key')](data.field, data.form);
-        }
+          if (res.action) {
+              location.href = res.action;
+          }
+          // else {
+          //   fly.form[action||button.attr('key')](data.field, data.form);
+          // }
       };
       if(res.status == 0){
         button.attr('alert') ? layer.alert(res.msg, {
