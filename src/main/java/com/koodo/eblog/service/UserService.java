@@ -3,6 +3,7 @@ package com.koodo.eblog.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.koodo.eblog.common.lang.Result;
 import com.koodo.eblog.entity.User;
+import com.koodo.eblog.shiro.AccountProfile;
 
 /**
  * <p>
@@ -15,4 +16,6 @@ import com.koodo.eblog.entity.User;
 public interface UserService extends IService<User> {
 
     Result register(User user);
+
+    AccountProfile login(String email, String password);
 }

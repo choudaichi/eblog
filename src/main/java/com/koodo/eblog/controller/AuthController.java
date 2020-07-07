@@ -1,13 +1,18 @@
 package com.koodo.eblog.controller;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
 import com.google.code.kaptcha.Producer;
 import com.koodo.eblog.common.lang.Result;
 import com.koodo.eblog.entity.User;
 import com.koodo.eblog.util.ValidationUtil;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.imageio.ImageIO;
@@ -48,9 +53,39 @@ public class AuthController extends BaseController {
 
     @ResponseBody
     @PostMapping("/login")
-    public Result doLogin() {
+    public Result doLogin(String email, String password) {
+
+        if (StrUtil.isEmpty(email) || StrUtil.isBlank(password)) {
+            return Result.fail("邮箱或密码不能为空");
+        }
+
+        UsernamePasswordToken token = new UsernamePasswordToken(email, SecureUtil.md5(password));
+
+        try {
+            SecurityUtils.getSubject().login(token);
+        } catch (AuthenticationException e) {
+            if (e instanceof UnknownAccountException) {
+                return Result.fail("用户不存在");
+            } else if (e instanceof LockedAccountException) {
+                return Result.fail("用户被禁用");
+            } else if (e instanceof IncorrectCredentialsException) {
+                return Result.fail("密码错误");
+            } else {
+                return Result.fail("用户认证失败");
+            }
+        }
+
+
         return Result.success().action("/");
     }
+
+
+    @RequestMapping("/user/logout")
+    public String logout() {
+        SecurityUtils.getSubject().logout();
+        return "redirect:/";
+    }
+
 
     @GetMapping("/register")
     public String register() {

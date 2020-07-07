@@ -1,5 +1,6 @@
 package com.koodo.eblog.config;
 
+import com.jagregory.shiro.freemarker.ShiroTags;
 import com.koodo.eblog.template.HotsTemplate;
 import com.koodo.eblog.template.PostsTemplate;
 import com.koodo.eblog.template.TimeAgoMethod;
@@ -25,5 +26,6 @@ public class FreemarkerConfig {
         configuration.setSharedVariable("timeAgo", new TimeAgoMethod());
         configuration.setSharedVariable("posts", postsTemplate);
         configuration.setSharedVariable("hots", hotsTemplate);
+        configuration.setSharedVariable("shiro", new ShiroTags());
     }
 }
