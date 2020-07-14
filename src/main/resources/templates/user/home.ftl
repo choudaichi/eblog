@@ -69,4 +69,8 @@
         </div>
     </div>
 
+
+    <script>
+        layui.cache.page = 'user';
+    </script>
 </@layout>

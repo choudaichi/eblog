@@ -12,6 +12,7 @@ public class AccountProfile implements Serializable {
     private String username;
     private String email;
     private String avatar;
+    private String sign;
     private Date created;
 
 }
