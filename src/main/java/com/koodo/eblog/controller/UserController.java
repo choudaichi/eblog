@@ -3,11 +3,15 @@ package com.koodo.eblog.controller;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.koodo.eblog.common.lang.Result;
 import com.koodo.eblog.entity.Post;
 import com.koodo.eblog.entity.User;
+import com.koodo.eblog.entity.UserCollection;
+import com.koodo.eblog.service.UserCollectionService;
 import com.koodo.eblog.shiro.AccountProfile;
 import com.koodo.eblog.util.UploadUtil;
+import com.koodo.eblog.vo.PostVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +26,9 @@ public class UserController extends BaseController {
 
     @Autowired
     UploadUtil uploadUtil;
+
+    @Autowired
+    UserCollectionService userCollectionService;
 
     @GetMapping("home")
     public String home() {
@@ -50,6 +57,27 @@ public class UserController extends BaseController {
 
         return "/user/set";
     }
+
+
+    @GetMapping("index")
+    public String index() {
+
+        int postCount = postService.count(new QueryWrapper<Post>()
+                .eq("user_id", getProfileId()));
+        req.setAttribute("user_postCount", postCount);
+
+        int collectionCount = userCollectionService.count(new QueryWrapper<UserCollection>()
+                .eq("user_id", getProfileId()));
+        req.setAttribute("user_collectionCount", collectionCount);
+
+        return "/user/index";
+    }
+
+    @GetMapping("mess")
+    public String mess() {
+        return "/user/mess";
+    }
+
 
     @ResponseBody
     @PostMapping("set")
@@ -119,6 +147,25 @@ public class UserController extends BaseController {
 
         return Result.success().action("/user/set#pass");
 
+    }
+
+    @ResponseBody
+    @GetMapping("public")
+    public Result userP() {
+        IPage page = postService.page(getPage(), new QueryWrapper<Post>()
+                .eq("user_id", getProfileId())
+                .orderByDesc("created"));
+
+        return Result.success(page);
+    }
+
+    @ResponseBody
+    @GetMapping("collection")
+    public Result collection() {
+
+        IPage<PostVo> page = userCollectionService.collectionPage(getPage(), getProfileId());
+
+        return Result.success(page);
     }
 
 }

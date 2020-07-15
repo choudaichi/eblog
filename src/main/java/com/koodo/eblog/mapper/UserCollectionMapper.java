@@ -1,7 +1,10 @@
 package com.koodo.eblog.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.koodo.eblog.entity.UserCollection;
+import com.koodo.eblog.vo.PostVo;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.koodo.eblog.entity.UserCollection;
  */
 public interface UserCollectionMapper extends BaseMapper<UserCollection> {
 
+    IPage<PostVo> selectCollections(Page page, Long userId);
 }

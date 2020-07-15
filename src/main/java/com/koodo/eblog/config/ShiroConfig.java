@@ -42,6 +42,8 @@ public class ShiroConfig {
         hashMap.put("/user/home", "authc");
         hashMap.put("/user/set", "authc");
         hashMap.put("/user/upload", "authc");
+        hashMap.put("/user/index", "authc");
+        hashMap.put("/user/mess", "authc");
         hashMap.put("/login", "anon");
         filterFactoryBean.setFilterChainDefinitionMap(hashMap);
 
