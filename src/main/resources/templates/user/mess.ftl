@@ -21,25 +21,36 @@
                 <div id="LAY_minemsg" style="margin-top: 10px;">
                     <!--<div class="fly-none">您暂时没有最新消息</div>-->
                     <ul class="mine-msg">
-                        <li data-id="123">
-                            <blockquote class="layui-elem-quote">
-                                <a href="/jump?username=Absolutely" target="_blank"><cite>Absolutely</cite></a>回答了您的求解<a
-                                        target="_blank"
-                                        href="/jie/8153.html/page/0/#item-1489505778669"><cite>layui后台框架</cite></a>
-                            </blockquote>
-                            <p><span>1小时前</span><a href="javascript:;"
-                                                   class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a>
-                            </p>
-                        </li>
-                        <li data-id="123">
-                            <blockquote class="layui-elem-quote">
-                                系统消息：欢迎使用 layui
-                            </blockquote>
-                            <p><span>1小时前</span><a href="javascript:;"
-                                                   class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a>
-                            </p>
-                        </li>
+                        <#list pageData.records as mess>
+
+                            <li data-id="${mess.id}">
+                                <blockquote class="layui-elem-quote">
+                                    <#if mess.type == 0>
+                                        系统消息：${mess.content}
+                                    </#if>
+                                    <#if mess.type == 1>
+                                        <a href="/user/home/${mess.fromUserId}"
+                                           target="_blank"><cite> ${mess.fromUserName} </cite></a> 评论了你的文章 <a
+                                            target="_blank" href="/post/${mess.postId}"><cite> ${mess.postTitle} </cite></a>，内容是 (
+                                        <a target="_blank" href=""><cite>${mess.content}</cite></a>)
+                                    </#if>
+                                    <#if mess.type == 2>
+                                        <a href="/user/home/${mess.fromUserId}"
+                                           target="_blank"><cite> ${mess.fromUserName} </cite></a> 回复了你的评论 (<a
+                                            target="_blank" href=""><cite>${mess.content}</cite></a>)，文章是 <a
+                                            target="_blank" href="/post/${mess.postId}"><cite>${mess.postTitle} </cite></a>
+                                    </#if>
+
+                                </blockquote>
+                                <p><span>${timeAgo(mess.creted)}</span><a href="javascript:;"
+                                                                          class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a>
+                                </p>
+                            </li>
+                        </#list>
                     </ul>
+
+                    <@paging pageData></@paging>
+
                 </div>
             </div>
         </div>

@@ -1,5 +1,6 @@
 package com.koodo.eblog.controller;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -8,10 +9,13 @@ import com.koodo.eblog.common.lang.Result;
 import com.koodo.eblog.entity.Post;
 import com.koodo.eblog.entity.User;
 import com.koodo.eblog.entity.UserCollection;
+import com.koodo.eblog.entity.UserMessage;
 import com.koodo.eblog.service.UserCollectionService;
 import com.koodo.eblog.shiro.AccountProfile;
 import com.koodo.eblog.util.UploadUtil;
 import com.koodo.eblog.vo.PostVo;
+import com.koodo.eblog.vo.UserMessageVo;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
@@ -48,6 +53,23 @@ public class UserController extends BaseController {
         return "/user/home";
     }
 
+    @GetMapping("home/{id:\\d*}")
+    public String visit(@PathVariable(name = "id") Long id) {
+
+        User user = userService.getById(id);
+
+        List<Post> posts = postService.list(new QueryWrapper<Post>()
+                .eq("user_id", id)
+                //30天内
+                //.gt("created", DateUtil.offsetDay(new Date(),-30))
+                .orderByDesc("created")
+        );
+
+        req.setAttribute("user", user);
+        req.setAttribute("posts", posts);
+
+        return "/user/home";
+    }
 
     @GetMapping("set")
     public String set() {
@@ -75,6 +97,13 @@ public class UserController extends BaseController {
 
     @GetMapping("mess")
     public String mess() {
+
+        IPage<UserMessageVo> page = userMessageService.paging(getPage(), new QueryWrapper<UserMessageVo>()
+                .eq("to_user_id", getProfileId())
+                .orderByAsc("created"));
+
+        req.setAttribute("pageData", page);
+
         return "/user/mess";
     }
 
@@ -92,6 +121,7 @@ public class UserController extends BaseController {
 
             AccountProfile profile = getProfile();
             profile.setAvatar(temp.getAvatar());
+            SecurityUtils.getSubject().getSession().setAttribute("profile", profile);
 
             return Result.success().action("/user/set#avatar");
         }
@@ -116,7 +146,7 @@ public class UserController extends BaseController {
         AccountProfile profile = getProfile();
         profile.setUsername(temp.getUsername());
         profile.setSign(temp.getSign());
-
+        SecurityUtils.getSubject().getSession().setAttribute("profile", profile);
 
         return Result.success().action("/user/set#info");
     }
@@ -166,6 +196,31 @@ public class UserController extends BaseController {
         IPage<PostVo> page = userCollectionService.collectionPage(getPage(), getProfileId());
 
         return Result.success(page);
+    }
+
+    @ResponseBody
+    @PostMapping("msg/remove")
+    public Result msgRemove(Long id, @RequestParam(defaultValue = "false") Boolean all) {
+
+        boolean remove = userMessageService.remove(new QueryWrapper<UserMessage>()
+                .eq("to_user_id", getProfileId())
+                .eq(!all, "id", id));
+
+        if (remove) {
+            return Result.success();
+        } else {
+            return Result.fail("删除失败");
+        }
+    }
+
+    @ResponseBody
+    @PostMapping("msg/nums")
+    public Map msgNums() {
+
+        int count = userMessageService.count(new QueryWrapper<UserMessage>()
+                .eq("to_user_id", getProfileId())
+                .eq("status", "0"));
+        return MapUtil.builder("status", 0).put("count", count).build();
     }
 
 }

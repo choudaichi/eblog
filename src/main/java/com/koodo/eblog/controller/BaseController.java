@@ -3,6 +3,7 @@ package com.koodo.eblog.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.koodo.eblog.service.CommentService;
 import com.koodo.eblog.service.PostService;
+import com.koodo.eblog.service.UserMessageService;
 import com.koodo.eblog.service.UserService;
 import com.koodo.eblog.shiro.AccountProfile;
 import org.apache.shiro.SecurityUtils;
@@ -24,6 +25,9 @@ public class BaseController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    UserMessageService userMessageService;
 
     public Page getPage() {
         int pn = ServletRequestUtils.getIntParameter(req, "pn", 1);

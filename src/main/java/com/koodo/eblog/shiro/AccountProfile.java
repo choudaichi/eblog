@@ -15,4 +15,10 @@ public class AccountProfile implements Serializable {
     private String sign;
     private Date created;
 
+    private String gender;
+
+    public String getSex() {
+        return "0".equals(gender) ? "女" : "男";
+    }
+
 }
