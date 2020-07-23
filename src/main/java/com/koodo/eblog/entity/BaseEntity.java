@@ -8,7 +8,8 @@ import java.util.Date;
 
 @Data
 public class BaseEntity {
-    @TableId(value = "id", type = IdType.INPUT)
+
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     private Date created;
     private Date modified;

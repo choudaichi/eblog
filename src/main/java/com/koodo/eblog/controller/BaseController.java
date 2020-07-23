@@ -1,10 +1,7 @@
 package com.koodo.eblog.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.koodo.eblog.service.CommentService;
-import com.koodo.eblog.service.PostService;
-import com.koodo.eblog.service.UserMessageService;
-import com.koodo.eblog.service.UserService;
+import com.koodo.eblog.service.*;
 import com.koodo.eblog.shiro.AccountProfile;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +24,13 @@ public class BaseController {
     UserService userService;
 
     @Autowired
-    UserMessageService userMessageService;
+    UserMessageService messageService;
+
+    @Autowired
+    UserCollectionService collectionService;
+
+    @Autowired
+    CategoryService categoryService;
 
     public Page getPage() {
         int pn = ServletRequestUtils.getIntParameter(req, "pn", 1);

@@ -98,7 +98,7 @@ public class UserController extends BaseController {
     @GetMapping("mess")
     public String mess() {
 
-        IPage<UserMessageVo> page = userMessageService.paging(getPage(), new QueryWrapper<UserMessageVo>()
+        IPage<UserMessageVo> page = messageService.paging(getPage(), new QueryWrapper<UserMessageVo>()
                 .eq("to_user_id", getProfileId())
                 .orderByAsc("created"));
 
@@ -202,7 +202,7 @@ public class UserController extends BaseController {
     @PostMapping("msg/remove")
     public Result msgRemove(Long id, @RequestParam(defaultValue = "false") Boolean all) {
 
-        boolean remove = userMessageService.remove(new QueryWrapper<UserMessage>()
+        boolean remove = messageService.remove(new QueryWrapper<UserMessage>()
                 .eq("to_user_id", getProfileId())
                 .eq(!all, "id", id));
 
@@ -217,10 +217,11 @@ public class UserController extends BaseController {
     @PostMapping("msg/nums")
     public Map msgNums() {
 
-        int count = userMessageService.count(new QueryWrapper<UserMessage>()
+        int count = messageService.count(new QueryWrapper<UserMessage>()
                 .eq("to_user_id", getProfileId())
                 .eq("status", "0"));
         return MapUtil.builder("status", 0).put("count", count).build();
     }
+
 
 }
