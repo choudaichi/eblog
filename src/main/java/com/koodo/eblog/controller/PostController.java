@@ -12,6 +12,7 @@ import com.koodo.eblog.vo.CommentVo;
 import com.koodo.eblog.vo.PostVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -105,6 +106,25 @@ public class PostController extends BaseController {
 
         return Result.success().action("/post/" + post.getId());
     }
+
+    @Transactional
+    @ResponseBody
+    @PostMapping("/post/delete")
+    public Result delete(Long id) {
+        Post post = postService.getById(id);
+
+        Assert.isTrue(post != null, "文章已被删除");
+        Assert.isTrue(getProfileId().equals(post.getUserId()), "没有操作权限");
+
+        postService.removeById(id);
+
+        // 删除相关消息、收藏等
+        messageService.removeByMap(MapUtil.of("post_id", id));
+        collectionService.removeByMap(MapUtil.of("post_id", id));
+
+        return Result.success("删除成功").action("/user/index");
+    }
+
 
     /**
      * 判断用户是否收藏文章

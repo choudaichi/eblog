@@ -4,6 +4,7 @@ import com.koodo.eblog.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,15 @@ public class AccountRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+        AccountProfile profile = (AccountProfile) principals.getPrimaryPrincipal();
+
+        //给id为3的用户赋予admin权限，省去权限表简单做法
+        if (profile.getId() == 3) {
+            SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+            info.addRole("admin");
+            return info;
+        }
+
         return null;
     }
 
