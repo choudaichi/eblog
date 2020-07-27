@@ -7,9 +7,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.koodo.eblog.entity.UserMessage;
 import com.koodo.eblog.vo.UserMessageVo;
 
+import java.util.List;
+
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author choudaichi
@@ -18,4 +20,6 @@ import com.koodo.eblog.vo.UserMessageVo;
 public interface UserMessageService extends IService<UserMessage> {
 
     IPage<UserMessageVo> paging(Page page, QueryWrapper<UserMessageVo> wrapper);
+
+    void updateToReaded(List<Long> ids);
 }

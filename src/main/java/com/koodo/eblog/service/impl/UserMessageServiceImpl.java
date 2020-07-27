@@ -11,6 +11,8 @@ import com.koodo.eblog.vo.UserMessageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 服务实现类
@@ -23,10 +25,19 @@ import org.springframework.stereotype.Service;
 public class UserMessageServiceImpl extends ServiceImpl<UserMessageMapper, UserMessage> implements UserMessageService {
 
     @Autowired
-    UserMessageMapper userMessageMapper;
+    UserMessageMapper messageMapper;
 
     @Override
     public IPage<UserMessageVo> paging(Page page, QueryWrapper<UserMessageVo> wrapper) {
-        return userMessageMapper.selectMessages(page, wrapper);
+        return messageMapper.selectMessages(page, wrapper);
+    }
+
+    @Override
+    public void updateToReaded(List<Long> ids) {
+        if (ids.isEmpty()) return;
+
+        messageMapper.updateToReaded(new QueryWrapper<UserMessage>()
+                .in("id", ids)
+        );
     }
 }

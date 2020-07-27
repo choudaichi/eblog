@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -100,7 +101,16 @@ public class UserController extends BaseController {
 
         IPage<UserMessageVo> page = messageService.paging(getPage(), new QueryWrapper<UserMessageVo>()
                 .eq("to_user_id", getProfileId())
-                .orderByAsc("created"));
+                .orderByDesc("created"));
+
+        List<Long> ids = new ArrayList<>();
+        for (UserMessageVo messageVo : page.getRecords()) {
+            if (messageVo.getStatus() == 0) {
+                ids.add(messageVo.getId());
+            }
+        }
+        //批量修改成已读
+        messageService.updateToReaded(ids);
 
         req.setAttribute("pageData", page);
 

@@ -38,7 +38,7 @@ layui.define('fly', function(exports){
   });
 
   //提交回答
-  fly.form['/jie/reply/'] = function(data, required){
+  fly.form['/post/reply/'] = function (data, required) {
     var tpl = '<li>\
       <div class="detail-about detail-about-reply">\
         <a class="fly-avatar" href="/u/{{ layui.cache.user.uid }}" target="_blank">\
@@ -204,17 +204,17 @@ layui.define('fly', function(exports){
       });
     }
     ,del: function(li){ //删除
-      layer.confirm('确认删除该回答么？', function(index){
+      layer.confirm('确认删除该评论么？', function (index) {
         layer.close(index);
-        fly.json('/api/jieda-delete/', {
+        fly.json('/post/commentDelete/', {
           id: li.data('id')
-        }, function(res){
-          if(res.status === 0){
-            var count = dom.jiedaCount.text()|0;
+        }, function (res) {
+          if (res.status === 0) {
+            var count = dom.jiedaCount.text() | 0;
             dom.jiedaCount.html(--count);
             li.remove();
             //如果删除了最佳答案
-            if(li.hasClass('jieda-daan')){
+            if (li.hasClass('jieda-daan')) {
               $('.jie-status').removeClass('jie-status-ok').text('求解中');
             }
           } else {

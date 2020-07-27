@@ -43,11 +43,11 @@
                                 <i class="iconfont" title="人气">&#xe60b;</i> ${post.viewCount}</span>
                     </div>
                     <div class="detail-about">
-                        <a class="fly-avatar" href="/user/${post.authorId}">
+                        <a class="fly-avatar" href="/user/home/${post.authorId}">
                             <img src="${post.authorAvatar}" alt="${post.authorName}">
                         </a>
                         <div class="fly-detail-user">
-                            <a href="/user/${post.authorId}" class="fly-link">
+                            <a href="/user/home/${post.authorId}" class="fly-link">
                                 <cite>${post.authorName}</cite>
                             </a>
                             <span>${timeAgo(post.created)}</span>
@@ -83,11 +83,11 @@
                             <li data-id="${comment.id}" class="jieda-daan">
                                 <a name="item-${comment.id}"></a>
                                 <div class="detail-about detail-about-reply">
-                                    <a class="fly-avatar" href="/user/${comment.authorId}">
+                                    <a class="fly-avatar" href="/user/home/${comment.authorId}">
                                         <img src="${comment.authorAvatar}" alt="${comment.authorName}">
                                     </a>
                                     <div class="fly-detail-user">
-                                        <a href="/user/${comment.authorId}" class="fly-link">
+                                        <a href="/user/home/${comment.authorId}" class="fly-link">
                                             <cite>${comment.authorName}</cite>
                                         </a>
                                         <#if post.authorId == comment.authorId>
@@ -101,19 +101,18 @@
 
                                 </div>
                                 <div class="detail-body jieda-body photos">
-                                    <p>${comment.content}</p>
+                                    ${comment.content}
                                 </div>
                                 <div class="jieda-reply">
-                            <span class="jieda-zan zanok" type="zan">
-                              <i class="iconfont icon-zan"></i>
-                              <em>${comment.voteUp}</em>
-                            </span>
+                                    <span class="jieda-zan zanok" type="zan">
+                                        <i class="iconfont icon-zan"></i>
+                                        <em>${comment.voteUp}</em>
+                                    </span>
                                     <span type="reply">
                                     <i class="iconfont icon-svgmoban53"></i>
                                     回复
                                 </span>
                                     <div class="jieda-admin">
-                                        <span type="edit">编辑</span>
                                         <span type="del">删除</span>
                                     </div>
                                 </div>
@@ -125,7 +124,7 @@
                     <@paging pageData></@paging>
 
                     <div class="layui-form layui-form-pane">
-                        <form action="/jie/reply/" method="post">
+                        <form action="/post/reply/" method="post">
                             <div class="layui-form-item layui-form-text">
                                 <a name="comment"></a>
                                 <div class="layui-input-block">

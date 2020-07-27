@@ -32,12 +32,14 @@
                                         <a href="/user/home/${mess.fromUserId}"
                                            target="_blank"><cite> ${mess.fromUserName} </cite></a> 评论了你的文章 <a
                                             target="_blank" href="/post/${mess.postId}"><cite> ${mess.postTitle} </cite></a>，内容是 (
-                                        <a target="_blank" href=""><cite>${mess.content}</cite></a>)
+                                        <a target="_blank" href="/post/${mess.postId}#comment"><cite
+                                                    class="my-content">${mess.content}</cite></a>)
                                     </#if>
                                     <#if mess.type == 2>
                                         <a href="/user/home/${mess.fromUserId}"
                                            target="_blank"><cite> ${mess.fromUserName} </cite></a> 回复了你的评论 (<a
-                                            target="_blank" href=""><cite>${mess.content}</cite></a>)，文章是 <a
+                                            target="_blank" href="/post/${mess.postId}#comment"><cite
+                                                class="my-content">${mess.content}</cite></a>)，文章是 <a
                                             target="_blank" href="/post/${mess.postId}"><cite>${mess.postTitle} </cite></a>
                                     </#if>
 
@@ -59,6 +61,15 @@
 
     <script>
         layui.cache.page = 'user';
+        $(function () {
+            layui.use(['fly', 'face'], function () {
+                var fly = layui.fly;
+                $('.my-content').each(function () {
+                    var othis = $(this), html = othis.html();
+                    othis.html(fly.content(html));
+                });
+            });
+        });
     </script>
 
 </@layout>
