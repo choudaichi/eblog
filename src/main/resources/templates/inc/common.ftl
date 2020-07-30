@@ -26,6 +26,36 @@
     </div>
 </#macro>
 
+<#--搜索分页-->
+<#macro searchPaging pageData q>
+
+    <div style="text-align: center">
+        <div id="laypage-main">
+
+        </div>
+        <script>
+            layui.use('laypage', function () {
+                var laypage = layui.laypage;
+                //执行一个laypage实例
+                laypage.render({
+                    elem: 'laypage-main'
+                    , count: ${pageData.total}
+                    , curr: ${pageData.current}
+                    , limit: ${pageData.size}
+                    , jump: function (obj, first) {
+                        //首次不执行
+                        if (!first) {
+                            location.href =
+                                "?q=${q}" +
+                                "&pn=" + obj.curr;
+                        }
+                    }
+                });
+            });
+        </script>
+    </div>
+</#macro>
+
 <#macro plisting post>
     <li>
         <a href="user/${post.authorId}" class="fly-avatar">

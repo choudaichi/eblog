@@ -4,7 +4,9 @@ import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.koodo.eblog.common.lang.Result;
+import com.koodo.eblog.config.RabbitMQConfig;
 import com.koodo.eblog.entity.*;
+import com.koodo.eblog.search.mq.PostMqIndexMsg;
 import com.koodo.eblog.service.PostService;
 import com.koodo.eblog.util.ValidationUtil;
 import com.koodo.eblog.vo.CommentVo;
@@ -103,6 +105,8 @@ public class PostController extends BaseController {
             postService.updateById(tempPost);
         }
 
+        amqpTemplate.convertAndSend(RabbitMQConfig.ES_EXCHANGE, RabbitMQConfig.ES_BIND_KEY, new PostMqIndexMsg(post.getId(), PostMqIndexMsg.CREATE_OR_UPDATE));
+
         return Result.success().action("/post/" + post.getId());
     }
 
@@ -120,6 +124,8 @@ public class PostController extends BaseController {
         // 删除相关消息、收藏等
         messageService.removeByMap(MapUtil.of("post_id", id));
         collectionService.removeByMap(MapUtil.of("post_id", id));
+
+        amqpTemplate.convertAndSend(RabbitMQConfig.ES_EXCHANGE, RabbitMQConfig.ES_BIND_KEY, new PostMqIndexMsg(post.getId(), PostMqIndexMsg.REMOVE));
 
         return Result.success("删除成功").action("/user/index");
     }
