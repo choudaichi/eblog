@@ -32,3 +32,7 @@ mybatis-plus:
 file:
   upload:
     dir: ${user.dir}/upload
+
+im:
+  server:
+    port: 9326
